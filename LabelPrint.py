@@ -26,14 +26,15 @@ class LabelPrint:
     def __getUPCPosition(self,upc):
         n=len(upc)
         if(n<13):
-            pos=140+((13-n)*2)
+            pos=115+((13-n)*2)
         else:
-            pos=140-((n-13)*2)
+            pos=115-((n-13)*2)
         return pos
-    def generateLabel(self,dcNo='0',upc='0',title='',price='$0',ip_add='10.1.10.155'):
+    def generateLabel(self,dcNo='0',upc='0',title='',price='$0',ip_add='10.1.10.155',width=2.25,height=1.25):
+
         zpl = ZPLDocument()
         zpl.add_comment('DC No')
-        zpl.add_field_origin(420, 15)
+        zpl.add_field_origin(320, 25)
         zpl.add_font('A', zpl._ORIENTATION_NORMAL, 10)
         zpl.add_field_data(str(dcNo))
         
@@ -42,16 +43,16 @@ class LabelPrint:
         upcPos=self.__getUPCPosition(upc)
         zpl.add_field_origin(int(upcPos), 50)
         code128_data = str(upc)
-        bc = Code128_Barcode(code128_data, 'N', 40, 'Y')
+        bc = Code128_Barcode(code128_data, 'N', 50, 'Y')
         zpl.add_barcode(bc)
 
         zpl.add_comment('Date')
-        zpl.add_field_origin(30, 150)
-        zpl.add_font('A', zpl._ORIENTATION_NORMAL, 16)
+        zpl.add_field_origin(30, 180)
+        zpl.add_font('S', zpl._ORIENTATION_NORMAL, 16)
         zpl.add_field_data(datetime.datetime.now().strftime('%d/%m/%Y'))
 
         zpl.add_comment('Price')
-        zpl.add_field_origin(420, 150)
+        zpl.add_field_origin(290, 180)
         zpl.add_font('G', zpl._ORIENTATION_NORMAL, 18)
         zpl.add_field_data(str('$'+price))
         self.printZPL(zpl)
